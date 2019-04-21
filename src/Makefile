@@ -14,7 +14,7 @@ all: $(TARGET)
 $(TARGET): stack.o code.o vm.o opcode_runner.o bytecode.h
 
 stack.o: stack.h
-opcode_runner.o: opcode_runner.h stack.h bytecode.h
+opcode_runner.o: opcode_runner.h code.h stack.h bytecode.h
 vm.o: vm.h stack.h opcode_runner.h bytecode.h
 code.o: code.h
 
