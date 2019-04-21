@@ -19,7 +19,7 @@ void vm_run(VM * vm, Code * code)
   opcode = code_fetch(code, vm->instr_ptr);
   
   while (opcode != HALT) {
-    printf("Opcode: %d\t IP: %d\t", opcode, vm->instr_ptr);
+    printf("Opcode: %4d\t IP: %d\t", opcode, vm->instr_ptr);
     vm->instr_ptr = runners[opcode](code, vm->stack, vm->instr_ptr);
     opcode = code_fetch(code, vm->instr_ptr);
     stack_debug_print(vm->stack);
