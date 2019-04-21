@@ -22,6 +22,6 @@
 #define GSTORE 12u
 #define PRINT 13u
 #define HALT 14u
-
+#define IDIV 15u
 
 #endif /* bytecode.h */
