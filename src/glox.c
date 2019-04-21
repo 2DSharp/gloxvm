@@ -19,6 +19,6 @@ int main(int argc, char **argv )
 
   printf("IP: %d\n", vm->instr_ptr);
   vm_run(vm, code);
-  //printf("IP: %d", vm->instr_ptr);
+  printf("IP: %d\n", vm->instr_ptr);
   
 }
