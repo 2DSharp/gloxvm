@@ -6,6 +6,5 @@ int op_nop(Stack * stack, int ip)
 }
 void opcode_runner_init(opcode_runner * ops)
 {
-  printf("Here");
   ops[NOP] = op_nop;
 }

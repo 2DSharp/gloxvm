@@ -1,13 +1,12 @@
 #ifndef VM_H
 #define VM_H
 
-#include <stdio.h>
-
 #include "stack.h"
 #include "code.h"
 #include "bytecode.h"
 #include "opcode_runner.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
