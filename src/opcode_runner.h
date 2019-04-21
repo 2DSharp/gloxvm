@@ -3,11 +3,15 @@
 
 #include "stack.h"
 #include "bytecode.h"
+#include "code.h"
 
 #include <stdio.h>
-typedef int (* opcode_runner)(Stack *, int);
+typedef int (* opcode_runner)(Code *, Stack *, int);
 
-int op_nop(Stack * stack, int ip);
+int exec_nop(Code *, Stack * stack, int ip);
+int exec_iadd(Code *, Stack * stack, int ip);
+int exec_iconst(Code *, Stack * stack, int ip);
+
 void opcode_runner_init(opcode_runner * ops);
 
 #endif
