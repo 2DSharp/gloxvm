@@ -12,8 +12,8 @@ typedef struct stack_t
 } Stack;
 
 int stack_push(Stack * stack, int v);
-Stack stack_new(int size);
-
-inline stack_obj_t stack_pop(Stack * stack) { return stack->contents[stack->top--]; }
+Stack * stack_new(int size);
+void stack_debug_print(Stack * stack);
+stack_obj_t stack_pop(Stack * stack);
 
 #endif
