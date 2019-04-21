@@ -9,6 +9,7 @@ typedef struct code_t
   short * contents;
 } Code;
 
-inline short code_fetch(Code * code, int index) { return code->contents[index]; }
+Code * code_init(short * contents, size_t size);
+short code_fetch(Code * code, int index);
 
 #endif
