@@ -21,7 +21,7 @@
 #define STORE 11u
 #define GSTORE 12u
 #define PRINT 13u
-
+#define HALT 14u
 
 
 #endif /* bytecode.h */

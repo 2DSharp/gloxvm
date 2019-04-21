@@ -1,7 +1,13 @@
 #ifndef VM_H
 #define VM_H
 
+#include <stdio.h>
+
 #include "stack.h"
+#include "code.h"
+#include "bytecode.h"
+#include "opcode_runner.h"
+
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -14,8 +20,9 @@ typedef struct vm_t
   
 } VM;
 
+
 VM * vm_init(uint32_t stack_size);
-void vm_run();
+void vm_run(VM * vm, Code * code);
 void vm_fetch();
 void vm_decode();
 void vm_execute();
