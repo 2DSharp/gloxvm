@@ -22,8 +22,9 @@ typedef struct vm_t
 
 VM * vm_init(uint32_t stack_size);
 void vm_run(VM * vm, Code * code);
+void vm_close(VM * vm);
 void vm_fetch();
 void vm_decode();
-void vm_execute();
+
 
 #endif /* vm.h */

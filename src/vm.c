@@ -10,20 +10,31 @@ VM * vm_init(uint32_t stack_size)
   return vm;
 }
 
-void vm_run(VM * vm, Code * code)
+void vm_execute(VM * vm, Code * code_mem, short opcode, opcode_runner * runners)
+{
+    vm->instr_ptr = runners[opcode](code_mem, vm->stack, vm->instr_ptr);
+    ++vm->instr_ptr;
+}
+
+void vm_run(VM * vm, Code * code_mem)
 {
   short opcode;
   opcode_runner runners[128];
   
   opcode_runner_init(runners);
-  opcode = code_fetch(code, vm->instr_ptr);
+  opcode = code_fetch(code_mem, vm->instr_ptr);
   
   while (opcode != HALT) {
     printf("Opcode: %4d\t IP: %d\t", opcode, vm->instr_ptr);
-    vm->instr_ptr = runners[opcode](code, vm->stack, vm->instr_ptr);
-    opcode = code_fetch(code, vm->instr_ptr);
+    vm_execute(vm, code_mem, opcode, runners);
+    opcode = code_fetch(code_mem, vm->instr_ptr);
     stack_debug_print(vm->stack);
     printf("\tTop: %d\n", vm->stack->top);
-  }
-    
+  }   
+}
+
+void vm_close(VM * vm)
+{
+  stack_flush(vm->stack);
+  free(vm);
 }
