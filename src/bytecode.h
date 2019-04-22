@@ -23,5 +23,6 @@
 #define PRINT 19u
 #define HALT 20u
 #define IDIV 21u
+#define PRINTLN 22u
 
 #endif /* bytecode.h */

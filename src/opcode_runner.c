@@ -56,7 +56,17 @@ int exec_print(Code * code, Stack * stack, int ip)
 {
   short v = stack_pop(stack);
   printf("%d", v);
+  /* We don't want to remove this from the stack */
+  stack_push(stack, v);
   return ++ip;
+}
+
+/* Temporary till we start supporting ASCII prints */
+int exec_println(Code * code, Stack * stack, int ip)
+{
+  ip =  exec_print(code, stack, ip);
+  printf("\n");
+  return ip;
 }
 
 int exec_load(Code * code, Stack * stack, int ip)
@@ -85,6 +95,7 @@ void opcode_runner_init(opcode_runner * ops)
   ops[IDIV] = exec_idiv;
   ops[ICONST] = exec_iconst;
   ops[PRINT] = exec_print;
+  ops[PRINTLN] = exec_println;
   ops[LOAD] = exec_load;
   ops[STORE] = exec_store;
   ops[JMP] = exec_jmp;
