@@ -2,6 +2,7 @@
 #include <stdint.h>
 
 #include "stack.h"
+#include "memory.h"
 #include "vm.h"
 #include "code.h"
 
@@ -13,7 +14,10 @@ int main(int argc, char **argv )
   if (argc > 1) {
     stack_size = atoi(argv[1]);
   }
-  vm = vm_init(stack_size);
+
+  Memory * mem = mem_init(4096, 1024);
+  
+  vm = vm_init(stack_size, mem);
 
   short instrs[] = { ICONST, 0,
 		     STORE, 1,
@@ -36,4 +40,5 @@ int main(int argc, char **argv )
   
   vm_close(vm);
   free(code);
+  free(mem);
 }
