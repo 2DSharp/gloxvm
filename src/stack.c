@@ -36,21 +36,3 @@ void stack_flush(Stack * stack)
   //free(stack->contents);
   free(stack);
 }
-
-void stack_load(Stack * stack, short offset)
-{
-  int addr = stack->frame_ptr - offset;
-
-  stack_push(stack, stack->contents[addr]);
-}
-
-void stack_store(Stack * stack, short offset)
-{
-  int addr = stack->frame_ptr - offset;
-
-  //printf("Addr: %d", addr);
-  int v = stack_pop(stack);
-
-  stack->contents[addr] = v;
-  //printf("Content: %d", stack->contents[addr]);
-}

@@ -16,9 +16,6 @@ Stack * stack_new(int size);
 void stack_debug_print(Stack * stack);
 stack_obj_t stack_pop(Stack * stack);
 
-void stack_store(Stack * stack, short offset);
-void stack_load(Stack * stack, short offset);
-
 void stack_flush(Stack * stack);
 
 #endif
