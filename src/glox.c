@@ -21,4 +21,6 @@ int main(int argc, char **argv )
   vm_run(vm, code);
   printf("IP: %d\n", vm->instr_ptr);
   
+  vm_close(vm);
+  free(code);
 }
