@@ -15,7 +15,7 @@ void vm_run(VM * vm, Code * code_mem, int debug)
   short opcode;
   opcode_runner exec[128];
   
-  opcode_runner_init(runners);
+  opcode_runner_init(exec);
   opcode = code_fetch(code_mem, vm->instr_ptr);
   
   while (opcode != HALT) {
