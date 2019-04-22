@@ -48,11 +48,16 @@ int exec_idiv(Code * code, Stack * stack, int ip)
 int exec_iconst(Code * code, Stack * stack, int ip)
 {
   short v = code_fetch(code, ++ip);
-
   stack_push(stack, v);
   return ip;
 }
 
+int exec_print(Code * code, Stack * stack, int ip)
+{
+  short v = stack_pop(stack);
+  printf("%d", v);
+  return ip;
+}
 void opcode_runner_init(opcode_runner * ops)
 {
   ops[NOP] = exec_nop;
@@ -61,6 +66,6 @@ void opcode_runner_init(opcode_runner * ops)
   ops[IMUL] = exec_imul;
   ops[IDIV] = exec_idiv;
   ops[ICONST] = exec_iconst;
-  
+  ops[PRINT] = exec_print;
   
 }
