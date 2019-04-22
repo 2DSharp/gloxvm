@@ -86,6 +86,19 @@ int exec_jmp(Code * code, Stack * stack, int ip)
   return code_fetch(code, ++ip);
 }
 
+/* 
+ * Conditional Jump 
+ * If true on top of stack
+ */
+int exec_jmpt(Code * code, Stack * stack, int ip)
+{
+  int addr = code_fetch(code, ++ip);
+  if (stack_pop(stack) == TRUE)
+    return addr;
+  else
+    return ++ip;
+}
+
 void opcode_runner_init(opcode_runner * ops)
 {
   ops[NOP] = exec_nop;
@@ -99,4 +112,5 @@ void opcode_runner_init(opcode_runner * ops)
   ops[LOAD] = exec_load;
   ops[STORE] = exec_store;
   ops[JMP] = exec_jmp;
+  ops[JMPT] = exec_jmpt;
 }
