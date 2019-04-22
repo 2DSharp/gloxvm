@@ -2,7 +2,6 @@
 #define OPCODE_RUNNER_H
 
 #include "vm_struct.h"
-#include "vm.h"
 #include "bytecode.h"
 #include "code.h"
 
