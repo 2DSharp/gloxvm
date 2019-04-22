@@ -1,126 +1,125 @@
 #include "opcode_runner.h"
 
-int exec_nop(Code * code, Stack * stack, int ip)
+void exec_nop(Code * code, VM * vm)
 {
-  return ++ip;
+  ++vm->instr_ptr;
 }
 
-int exec_iadd(Code * code, Stack * stack, int ip)
+void exec_iadd(Code * code, VM * vm)
 {
-  short b = stack_pop(stack);
-  short a = stack_pop(stack);
+  short b = stack_pop(vm->stack);
+  short a = stack_pop(vm->stack);
   
-  stack_push(stack, a + b);
+  stack_push(vm->stack, a + b);
   
-  return ++ip;
+   ++vm->instr_ptr;
 }
 
-int exec_isub(Code * code, Stack * stack, int ip)
+void exec_isub(Code * code, VM * vm)
 {
-  short b = stack_pop(stack);
-  short a = stack_pop(stack);
+  short b = stack_pop(vm->stack);
+  short a = stack_pop(vm->stack);
   
-  stack_push(stack, a - b);
+  stack_push(vm->stack, a - b);
   
-  return ++ip;
+   ++vm->instr_ptr;
 }
 
-int exec_imul(Code * code, Stack * stack, int ip)
+void exec_imul(Code * code, VM * vm)
 {
-  short b = stack_pop(stack);
-  short a = stack_pop(stack);
+  short b = stack_pop(vm->stack);
+  short a = stack_pop(vm->stack);
 
-  stack_push(stack, a * b);
+  stack_push(vm->stack, a * b);
   
-  return ++ip;
+   ++vm->instr_ptr;
 }
 
-int exec_idiv(Code * code, Stack * stack, int ip)
+void exec_idiv(Code * code, VM * vm)
 {
-  short b = stack_pop(stack);
-  short a = stack_pop(stack);
+  short b = stack_pop(vm->stack);
+  short a = stack_pop(vm->stack);
   
-  stack_push(stack, a / b);
+  stack_push(vm->stack, a / b);
   
-  return ++ip;
+   ++vm->instr_ptr;
 }
 
-int exec_iconst(Code * code, Stack * stack, int ip)
+void exec_iconst(Code * code, VM * vm)
 {
-  short v = code_fetch(code, ++ip);
-  stack_push(stack, v);
-  return ++ip;
+  short v = code_fetch(code, ++vm->instr_ptr);
+  stack_push(vm->stack, v);
+   ++vm->instr_ptr;
 }
 
-int exec_print(Code * code, Stack * stack, int ip)
+void exec_print(Code * code, VM * vm)
 {
-  short v = stack_pop(stack);
+  short v = stack_pop(vm->stack);
   printf("%d", v);
   /* We don't want to remove this from the stack */
-  stack_push(stack, v);
-  return ++ip;
+  stack_push(vm->stack, v);
+   ++vm->instr_ptr;
 }
 
 /* Temporary till we start supporting ASCII prints */
-int exec_println(Code * code, Stack * stack, int ip)
+void exec_println(Code * code, VM * vm)
 {
-  ip =  exec_print(code, stack, ip);
+  exec_print(code, vm);
   printf("\n");
-  return ip;
 }
 
-int exec_load(Code * code, Stack * stack, int ip)
+void exec_load(Code * code, VM * vm)
 {
-  stack_load(stack, code_fetch(code, ++ip));
-  return ++ip;
+  stack_load(vm->stack, code_fetch(code, ++vm->instr_ptr));
+  ++vm->instr_ptr;
 }
 
-int exec_store(Code * code, Stack * stack, int ip)
+void exec_store(Code * code, VM * vm)
 {
-  stack_store(stack, code_fetch(code, ++ip));
-  return ++ip;
+  stack_store(vm->stack, code_fetch(code, ++vm->instr_ptr));
+  ++vm->instr_ptr;
 }
 
-int exec_jmp(Code * code, Stack * stack, int ip)
+void exec_jmp(Code * code, VM * vm)
 {
-  return code_fetch(code, ++ip);
+   code_fetch(code, ++vm->instr_ptr);
 }
 
 /* 
  * Conditional Jump 
  * If true on top of stack
  */
-int exec_jmpt(Code * code, Stack * stack, int ip)
+void exec_jmpt(Code * code, VM * vm)
 {
-  int addr = code_fetch(code, ++ip);
-  if (stack_pop(stack) == TRUE)
-    return addr;
+  int addr = code_fetch(code, ++vm->instr_ptr);
+  if (stack_pop(vm->stack) == TRUE)
+    vm->instr_ptr = addr;
   else
-    return ++ip;
+     ++vm->instr_ptr;
 }
 
 /**
  * if equals, set stack top to true
  * To be used often with jmps
  */
-int exec_ieq(Code * code, Stack * stack, int ip)
+void exec_ieq(Code * code, VM * vm)
 {
-  short b = stack_pop(stack);
-  short a = stack_pop(stack);
+  short b = stack_pop(vm->stack);
+  short a = stack_pop(vm->stack);
   unsigned int isEqual = (a == b) ? TRUE : FALSE;
-  stack_push(stack, isEqual);
+  stack_push(vm->stack, isEqual);
   
-  return ++ip;  
+   ++vm->instr_ptr;  
 }
 
-int exec_ilt(Code * code, Stack * stack, int ip)
+void exec_ilt(Code * code, VM * vm)
 {
-  short b = stack_pop(stack);
-  short a = stack_pop(stack);
+  short b = stack_pop(vm->stack);
+  short a = stack_pop(vm->stack);
   unsigned int isEqual = (a < b) ? TRUE : FALSE;
-  stack_push(stack, isEqual);
+  stack_push(vm->stack, isEqual);
   
-  return ++ip;  
+  ++vm->instr_ptr;
 }
 
 void opcode_runner_init(opcode_runner * ops)

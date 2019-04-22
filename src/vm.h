@@ -3,21 +3,16 @@
 
 #include "stack.h"
 #include "code.h"
+#include "vm_struct.h"
 #include "bytecode.h"
 #include "opcode_runner.h"
+#include "memory.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef struct vm_t
-{
-  int instr_ptr;
-  Stack * stack;
-} VM;
-
-
-VM * vm_init(uint32_t stack_size);
+VM * vm_init(size_t stack_size, Memory * mem);
 void vm_run(VM * vm, Code * code, int debug);
 void vm_close(VM * vm);
 void vm_fetch();
