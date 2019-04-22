@@ -16,7 +16,7 @@ void vm_execute(VM * vm, Code * code_mem, short opcode, opcode_runner * runners)
     ++vm->instr_ptr;
 }
 
-void vm_run(VM * vm, Code * code_mem)
+void vm_run(VM * vm, Code * code_mem, int debug)
 {
   short opcode;
   opcode_runner runners[128];
@@ -25,11 +25,19 @@ void vm_run(VM * vm, Code * code_mem)
   opcode = code_fetch(code_mem, vm->instr_ptr);
   
   while (opcode != HALT) {
-    printf("Opcode: %4d\t IP: %d\t", opcode, vm->instr_ptr);
+
     vm_execute(vm, code_mem, opcode, runners);
+
+    if (debug) {
+      printf("Opcode: %4d\t IP: %d\t", opcode, vm->instr_ptr);
+    }
+
     opcode = code_fetch(code_mem, vm->instr_ptr);
-    stack_debug_print(vm->stack);
-    printf("\tTop: %d\n", vm->stack->top);
+
+    if (debug) {
+      stack_debug_print(vm->stack);
+      printf("\tTop: %d\n", vm->stack->top);
+    }
   }   
 }
 
