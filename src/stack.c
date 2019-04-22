@@ -5,7 +5,6 @@ Stack * stack_new(int size)
 {
   Stack * stack = malloc(sizeof(Stack));
   stack->top = -1;
-  stack->frame_ptr = -1;
   stack->size = size;
   
   int stack_arr[size];

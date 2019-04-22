@@ -8,7 +8,6 @@ typedef struct stack_t
 {
   int top;
   int size;
-  int frame_ptr;
   stack_obj_t * contents;
 } Stack;
 
