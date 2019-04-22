@@ -12,7 +12,6 @@ VM * vm_init(uint32_t stack_size)
 void vm_execute(VM * vm, Code * code_mem, short opcode, opcode_runner * runners)
 {
     vm->instr_ptr = runners[opcode](code_mem, vm->stack, vm->instr_ptr);
-    ++vm->instr_ptr;
 }
 
 void vm_run(VM * vm, Code * code_mem, int debug)
