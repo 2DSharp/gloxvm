@@ -70,13 +70,16 @@ void exec_println(Code * code, VM * vm)
 
 void exec_load(Code * code, VM * vm)
 {
-  stack_load(vm->stack, code_fetch(code, ++vm->instr_ptr));
+  int offset = code_fetch(code, ++vm->instr_ptr);
+  stack_push(vm->stack, vm->memory->locals[offset]);
   ++vm->instr_ptr;
 }
 
 void exec_store(Code * code, VM * vm)
 {
-  stack_store(vm->stack, code_fetch(code, ++vm->instr_ptr));
+  int offset = code_fetch(code, ++vm->instr_ptr);
+  vm->memory->locals[offset] = stack_pop(vm->stack);
+  
   ++vm->instr_ptr;
 }
 
