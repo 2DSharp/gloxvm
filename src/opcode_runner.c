@@ -2,7 +2,7 @@
 
 int exec_nop(Code * code, Stack * stack, int ip)
 {
-  return ip;
+  return ++ip;
 }
 
 int exec_iadd(Code * code, Stack * stack, int ip)
@@ -12,7 +12,7 @@ int exec_iadd(Code * code, Stack * stack, int ip)
   
   stack_push(stack, a + b);
   
-  return ip;
+  return ++ip;
 }
 
 int exec_isub(Code * code, Stack * stack, int ip)
