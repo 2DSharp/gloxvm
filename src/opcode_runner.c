@@ -99,6 +99,30 @@ int exec_jmpt(Code * code, Stack * stack, int ip)
     return ++ip;
 }
 
+/**
+ * if equals, set stack top to true
+ * To be used often with jmps
+ */
+int exec_ieq(Code * code, Stack * stack, int ip)
+{
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
+  unsigned int isEqual = (a == b) ? TRUE : FALSE;
+  stack_push(stack, isEqual);
+  
+  return ++ip;  
+}
+
+int exec_ilt(Code * code, Stack * stack, int ip)
+{
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
+  unsigned int isEqual = (a < b) ? TRUE : FALSE;
+  stack_push(stack, isEqual);
+  
+  return ++ip;  
+}
+
 void opcode_runner_init(opcode_runner * ops)
 {
   ops[NOP] = exec_nop;
@@ -113,4 +137,6 @@ void opcode_runner_init(opcode_runner * ops)
   ops[STORE] = exec_store;
   ops[JMP] = exec_jmp;
   ops[JMPT] = exec_jmpt;
+  ops[ILT] = exec_ilt;
+  ops[IEQ] = exec_ieq;
 }
