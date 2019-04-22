@@ -11,17 +11,17 @@
 #define IADD 7u
 #define ISUB 8u
 #define IMUL 9u
-#define ILT 0xau
-#define IEQ 0xbu
-#define JMP 0xcu
-#define JMPT 0xdu
-#define JMPF 0xeu
-#define LOAD 0xfu
-#define GLOAD 10u
-#define STORE 11u
-#define GSTORE 12u
-#define PRINT 13u
-#define HALT 14u
-#define IDIV 15u
+#define ILT 10u
+#define IEQ 11u
+#define JMP 12u
+#define JMPT 13u
+#define JMPF 14u
+#define LOAD 15u
+#define GLOAD 16u
+#define STORE 17u
+#define GSTORE 18u
+#define PRINT 19u
+#define HALT 20u
+#define IDIV 21u
 
 #endif /* bytecode.h */
