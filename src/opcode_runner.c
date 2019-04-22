@@ -2,7 +2,7 @@
 
 int exec_nop(Code * code, Stack * stack, int ip)
 {
-  return ++ip;
+  return ip;
 }
 
 int exec_iadd(Code * code, Stack * stack, int ip)
@@ -12,7 +12,7 @@ int exec_iadd(Code * code, Stack * stack, int ip)
   
   stack_push(stack, a + b);
   
-  return ++ip;
+  return ip;
 }
 
 int exec_isub(Code * code, Stack * stack, int ip)
@@ -22,7 +22,7 @@ int exec_isub(Code * code, Stack * stack, int ip)
   
   stack_push(stack, a - b);
   
-  return ++ip;
+  return ip;
 }
 
 int exec_imul(Code * code, Stack * stack, int ip)
@@ -32,7 +32,7 @@ int exec_imul(Code * code, Stack * stack, int ip)
 
   stack_push(stack, a * b);
   
-  return ++ip;
+  return ip;
 }
 
 int exec_idiv(Code * code, Stack * stack, int ip)
@@ -42,7 +42,7 @@ int exec_idiv(Code * code, Stack * stack, int ip)
   
   stack_push(stack, a / b);
   
-  return ++ip;
+  return ip;
 }
 
 int exec_iconst(Code * code, Stack * stack, int ip)
@@ -50,7 +50,7 @@ int exec_iconst(Code * code, Stack * stack, int ip)
   short v = code_fetch(code, ++ip);
 
   stack_push(stack, v);
-  return ++ip;
+  return ip;
 }
 
 void opcode_runner_init(opcode_runner * ops)
