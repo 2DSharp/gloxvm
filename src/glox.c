@@ -14,12 +14,25 @@ int main(int argc, char **argv )
     stack_size = atoi(argv[1]);
   }
   vm = vm_init(stack_size);
-  short instrs[] = { ICONST, 0, STORE, 1, LOAD, 1, ICONST, 1, IADD, PRINTLN, STORE, 1, LOAD, 1, ICONST, 50, ILT, JMPT, 4, HALT };
+
+  short instrs[] = { ICONST, 0,
+		     STORE, 1,
+		     LOAD, 1,
+		     ICONST, 1,
+		     IADD,
+		     PRINT,
+		     STORE, 1,
+		     LOAD, 1,
+		     ICONST, 50,
+		     ILT,
+		     JMPT, 4,
+		     HALT };
+  
   Code * code = code_init(instrs, 2);
 
-  printf("IP: %d\n", vm->instr_ptr);
-  vm_run(vm, code, 0);
-  printf("IP: %d\n", vm->instr_ptr);
+  //printf("IP: %d\n", vm->instr_ptr);
+  vm_run(vm, code, 1);
+  //printf("IP: %d\n", vm->instr_ptr);
   
   vm_close(vm);
   free(code);
