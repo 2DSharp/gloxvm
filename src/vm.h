@@ -13,10 +13,7 @@
 typedef struct vm_t
 {
   int instr_ptr;
-  int frame_ptr;
-  
   Stack * stack;
-  
 } VM;
 
 

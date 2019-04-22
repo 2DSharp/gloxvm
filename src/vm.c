@@ -4,7 +4,6 @@ VM * vm_init(uint32_t stack_size)
 {
   VM * vm = (VM*) malloc(sizeof(VM));
   vm->stack = stack_new(stack_size);
-  vm->frame_ptr = -1;
   vm->instr_ptr = 0;
 
   return vm;
@@ -29,7 +28,7 @@ void vm_run(VM * vm, Code * code_mem, int debug)
     vm_execute(vm, code_mem, opcode, runners);
 
     if (debug) {
-      printf("Opcode: %4d\t IP: %d\t", opcode, vm->instr_ptr);
+      printf("Opcode: %04d\t IP: %d\t", opcode, vm->instr_ptr);
     }
 
     opcode = code_fetch(code_mem, vm->instr_ptr);
@@ -38,7 +37,7 @@ void vm_run(VM * vm, Code * code_mem, int debug)
       stack_debug_print(vm->stack);
       printf("\tTop: %d\n", vm->stack->top);
     }
-  }   
+  }
 }
 
 void vm_close(VM * vm)
