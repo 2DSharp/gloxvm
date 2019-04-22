@@ -58,6 +58,19 @@ int exec_print(Code * code, Stack * stack, int ip)
   printf("%d", v);
   return ip;
 }
+
+int exec_load(Code * code, Stack * stack, int ip)
+{
+  stack_load(stack, code_fetch(code, ++ip));
+  return ip;
+}
+
+int exec_store(Code * code, Stack * stack, int ip)
+{
+  stack_store(stack, code_fetch(code, ++ip));
+  return ip;
+}
+
 void opcode_runner_init(opcode_runner * ops)
 {
   ops[NOP] = exec_nop;
@@ -67,5 +80,6 @@ void opcode_runner_init(opcode_runner * ops)
   ops[IDIV] = exec_idiv;
   ops[ICONST] = exec_iconst;
   ops[PRINT] = exec_print;
-  
+  ops[LOAD] = exec_load;
+  ops[STORE] = exec_store;
 }

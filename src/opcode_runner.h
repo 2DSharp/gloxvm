@@ -15,6 +15,8 @@ int exec_imul(Code *, Stack * stack, int ip);
 int exec_idiv(Code *, Stack * stack, int ip);
 int exec_iconst(Code *, Stack * stack, int ip);
 int exec_print(Code *, Stack * stack, int ip);
+int exec_load(Code *, Stack * stack, int ip);
+int exec_store(Code *, Stack * stack, int ip);
 
 void opcode_runner_init(opcode_runner * ops);
 
