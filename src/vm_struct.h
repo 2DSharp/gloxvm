@@ -1,5 +1,5 @@
-#ifndef VM_H
-#define VM_H
+#ifndef VM_STRUCT_H
+#define VM_STRUCT_H
 
 #include "stack.h"
 #include "memory.h"
