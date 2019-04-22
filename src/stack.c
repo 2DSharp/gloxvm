@@ -7,12 +7,13 @@ Stack * stack_new(int size)
   stack->top = -1;
   stack->size = size;
   
-  int stack_arr[size];
+  stack_obj_t stack_arr[size];
+
   stack->contents = stack_arr;
   return stack;
 }
 
-int stack_push(Stack * stack, int val)
+int stack_push(Stack * stack, stack_obj_t val)
 {
   stack->contents[++stack->top] = val;
   return stack->top;
