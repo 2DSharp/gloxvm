@@ -4,10 +4,9 @@
 #include "code.h"
 #include "memory.h"
 
-typedef void (* op_none)(Stack * stack);
+typedef void (* op_none)(void);
 typedef void (* op_noargs)(Stack * stack);
-typedef void (* op_args)(Stack * stack, const Code * code, short ip);
-typedef short (* op_cjmp)(Stack * stack, const Code * code, short ip);
+typedef short (* op_args)(Stack * stack, const Code * code, short ip);
 typedef short (* op_ujmp)(const Code *, short ip);
 typedef void (* op_mem)(Stack * stack, const Code * code, short ip, Memory * mem);
 
@@ -30,7 +29,7 @@ typedef struct opcode_t
     op_noargs exec_noargs;
     op_args exec_args;
     op_ujmp exec_ujmp;
-    op_cjmp exec_cjmp;
+    //op_cjmp exec_cjmp;
     op_mem exec_mem;
   };
 } Opcode;
