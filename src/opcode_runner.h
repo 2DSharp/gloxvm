@@ -1,11 +1,11 @@
 #ifndef OPCODE_RUNNER_H
 #define OPCODE_RUNNER_H
 
-#include "vm_struct.h"
-#include "bytecode.h"
+#include "includes/vm_struct.h"
+#include "includes/bytecode.h"
 #include "code.h"
 #include "memory.h"
-#include "opcode.h"
+#include "includes/opcode.h"
 
 #include <stdio.h>
 

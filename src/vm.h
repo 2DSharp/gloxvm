@@ -3,11 +3,11 @@
 
 #include "stack.h"
 #include "code.h"
-#include "vm_struct.h"
-#include "bytecode.h"
+#include "includes/vm_struct.h"
+#include "includes/bytecode.h"
 #include "memory.h"
 #include "opcode_runner.h"
-#include "opcode.h"
+#include "includes/opcode.h"
 
 #include <stdio.h>
 #include <stdlib.h>
