@@ -62,8 +62,7 @@ void exec_println(Stack * stack)
 short exec_load(Stack * stack, const Code * code, short ip, Memory * mem)
 {
   short offset = code_fetch(code, ++ip);
-  stack_push(stack, memory->locals[offset]);
-  
+  stack_push(stack, mem->locals[offset]);
 }
 
 
@@ -118,7 +117,7 @@ void exec_ilt(Stack * stack)
 
 void opcode_runner_init(Opcode * ops)
 {
-  ops[NOP].type = NOARGS;
+  ops[NOP].type = NONE;
   ops[NOP].exec_none = exec_nop;
 
   ops[IADD].type = NOARGS;
