@@ -6,7 +6,7 @@ VM * vm_init(size_t stack_size, Memory * mem)
   vm->stack = stack_new(stack_size);
   vm->instr_ptr = 0;
   vm->memory = mem;
-  
+  vm->state = ST_HALTED;
   return vm;
 }
 
@@ -47,7 +47,7 @@ void vm_run(VM * vm, Code * code_mem, int debug)
   
   opcode_runner_init(opcodes);
   code = code_fetch(code_mem, vm->instr_ptr);
-  
+
   while (code != HALT && vm->state != ST_INVALID) {
     /** Decode **/
     Opcode opcode = opcodes[code];
