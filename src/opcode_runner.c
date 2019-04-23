@@ -47,7 +47,7 @@ void exec_idiv(Code * code, VM * vm)
 
 void exec_iconst(Code * code, VM * vm)
 {
-  short v = code_fetch(code, ++vm->instr_ptr);
+  stack_obj_t v = code_fetch(code, ++vm->instr_ptr);
   stack_push(vm->stack, v);
    ++vm->instr_ptr;
 }
@@ -70,16 +70,16 @@ void exec_println(Code * code, VM * vm)
 
 void exec_load(Code * code, VM * vm)
 {
-  int offset = code_fetch(code, ++vm->instr_ptr);
+  short offset = code_fetch(code, ++vm->instr_ptr);
   stack_push(vm->stack, vm->memory->locals[offset]);
   ++vm->instr_ptr;
 }
 
 void exec_store(Code * code, VM * vm)
 {
-  int offset = code_fetch(code, ++vm->instr_ptr);
+
+  short offset = code_fetch(code, ++vm->instr_ptr);
   vm->memory->locals[offset] = stack_pop(vm->stack);
-  
   ++vm->instr_ptr;
 }
 

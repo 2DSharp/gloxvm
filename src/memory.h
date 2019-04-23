@@ -11,4 +11,5 @@ typedef struct memory_t
 } Memory;
 
 Memory * mem_init(unsigned int local_sz, unsigned int global_sz);
+void mem_flush(Memory * mem);
 #endif

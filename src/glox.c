@@ -40,5 +40,5 @@ int main(int argc, char **argv )
   
   vm_close(vm);
   free(code);
-  free(mem);
+  mem_flush(mem);
 }

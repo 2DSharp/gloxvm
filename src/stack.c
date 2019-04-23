@@ -4,12 +4,13 @@
 Stack * stack_new(int size)
 {
   Stack * stack = malloc(sizeof(Stack));
-  stack->top = -1;
+  stack->top = 0;
   stack->size = size;
   
-  stack_obj_t stack_arr[size];
+  stack->contents = malloc(size * sizeof(stack_obj_t));
 
-  stack->contents = stack_arr;
+  for (int i = 0; i < size; i++)
+    stack->contents[i] = 0;
   return stack;
 }
 
@@ -20,7 +21,8 @@ int stack_push(Stack * stack, stack_obj_t val)
 }
 stack_obj_t stack_pop(Stack * stack)
 {
-  return stack->contents[stack->top--];
+  int v = stack->contents[stack->top--];
+  return v;
 }
 
 void stack_debug_print(Stack * stack)
@@ -34,6 +36,6 @@ void stack_debug_print(Stack * stack)
 
 void stack_flush(Stack * stack)
 {
-  //free(stack->contents);
+  free(stack->contents);
   free(stack);
 }
