@@ -1,8 +1,8 @@
 #ifndef OPCODE_H
 #define OPCODE_H
-#include "stack.h"
-#include "code.h"
-#include "memory.h"
+#include "../stack.h"
+#include "../code.h"
+#include "../memory.h"
 
 typedef void (* op_none)(void);
 typedef void (* op_noargs)(Stack * stack);
