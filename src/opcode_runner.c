@@ -1,144 +1,162 @@
 #include "opcode_runner.h"
 
-void exec_nop(Code * code, VM * vm)
+void exec_nop()
 {
-  ++vm->instr_ptr;
+  return;
 }
 
-void exec_iadd(Code * code, VM * vm)
+void exec_iadd(Stack * stack)
 {
-  short b = stack_pop(vm->stack);
-  short a = stack_pop(vm->stack);
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
   
-  stack_push(vm->stack, a + b);
-  
-   ++vm->instr_ptr;
+  stack_push(stack, a + b);
 }
 
-void exec_isub(Code * code, VM * vm)
+void exec_isub(Stack * stack)
 {
-  short b = stack_pop(vm->stack);
-  short a = stack_pop(vm->stack);
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
   
-  stack_push(vm->stack, a - b);
-  
-   ++vm->instr_ptr;
+  stack_push(stack, a - b);
 }
 
-void exec_imul(Code * code, VM * vm)
+void exec_imul(Stack * stack)
 {
-  short b = stack_pop(vm->stack);
-  short a = stack_pop(vm->stack);
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
 
-  stack_push(vm->stack, a * b);
-  
-   ++vm->instr_ptr;
+  stack_push(stack, a * b);
 }
 
-void exec_idiv(Code * code, VM * vm)
+void exec_idiv(Stack * stack)
 {
-  short b = stack_pop(vm->stack);
-  short a = stack_pop(vm->stack);
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
   
-  stack_push(vm->stack, a / b);
-  
-   ++vm->instr_ptr;
+  stack_push(stack, a / b);
 }
 
-void exec_iconst(Code * code, VM * vm)
+short exec_iconst(Stack * stack, const Code * code, short ip)
 {
-  stack_obj_t v = code_fetch(code, ++vm->instr_ptr);
-  stack_push(vm->stack, v);
-   ++vm->instr_ptr;
+  stack_obj_t v = code_fetch(code, ++ip);
+  stack_push(stack, v);
+  return ip;
 }
 
-void exec_print(Code * code, VM * vm)
+void exec_print(Stack * stack)
 {
-  short v = stack_pop(vm->stack);
+  short v = stack_pop(stack);
   printf("%d", v);
   /* We don't want to remove this from the stack */
-  stack_push(vm->stack, v);
-   ++vm->instr_ptr;
+  stack_push(stack, v);
 }
 
 /* Temporary till we start supporting ASCII prints */
-void exec_println(Code * code, VM * vm)
+void exec_println(Stack * stack)
 {
-  exec_print(code, vm);
+  exec_print(stack);
   printf("\n");
 }
 
-void exec_load(Code * code, VM * vm)
+short exec_load(Stack * stack, const Code * code, short ip, Memory * mem)
 {
-  short offset = code_fetch(code, ++vm->instr_ptr);
-  stack_push(vm->stack, vm->memory->locals[offset]);
-  ++vm->instr_ptr;
+  short offset = code_fetch(code, ++ip);
+  stack_push(stack, memory->locals[offset]);
+  
 }
 
-void exec_store(Code * code, VM * vm)
+
+short exec_store(Stack * stack, const Code * code, short ip, Memory * mem)
 {
 
-  short offset = code_fetch(code, ++vm->instr_ptr);
-  vm->memory->locals[offset] = stack_pop(vm->stack);
-  ++vm->instr_ptr;
+  short offset = code_fetch(code, ip);
+  mem->locals[offset] = stack_pop(stack);
+  ++ip;
 }
 
-void exec_jmp(Code * code, VM * vm)
+short exec_jmp(const Code * code, short ip)
 {
-   code_fetch(code, ++vm->instr_ptr);
+  return code_fetch(code, ++ip);
 }
 
 /* 
  * Conditional Jump 
  * If true on top of stack
  */
-void exec_jmpt(Code * code, VM * vm)
+short exec_jmpt(Stack * stack, const Code * code, short ip)
 {
-  int addr = code_fetch(code, ++vm->instr_ptr);
-  if (stack_pop(vm->stack) == TRUE)
-    vm->instr_ptr = addr;
+  int addr = code_fetch(code, ++ip);
+  if (stack_pop(stack) == TRUE)
+    ip = addr;
   else
-     ++vm->instr_ptr;
+     ++ip;
+
+  return ip;
 }
 
 /**
  * if equals, set stack top to true
  * To be used often with jmps
  */
-void exec_ieq(Code * code, VM * vm)
+void exec_ieq(Stack * stack)
 {
-  short b = stack_pop(vm->stack);
-  short a = stack_pop(vm->stack);
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
   unsigned int isEqual = (a == b) ? TRUE : FALSE;
-  stack_push(vm->stack, isEqual);
-  
-   ++vm->instr_ptr;  
+  stack_push(stack, isEqual);
 }
 
-void exec_ilt(Code * code, VM * vm)
+void exec_ilt(Stack * stack)
 {
-  short b = stack_pop(vm->stack);
-  short a = stack_pop(vm->stack);
+  short b = stack_pop(stack);
+  short a = stack_pop(stack);
   unsigned int isEqual = (a < b) ? TRUE : FALSE;
-  stack_push(vm->stack, isEqual);
+  stack_push(stack, isEqual);
   
-  ++vm->instr_ptr;
 }
 
-void opcode_runner_init(opcode_runner * ops)
+void opcode_runner_init(Opcode * ops)
 {
-  ops[NOP] = exec_nop;
-  ops[IADD] = exec_iadd;
-  ops[ISUB] = exec_isub;
-  ops[IMUL] = exec_imul;
-  ops[IDIV] = exec_idiv;
-  ops[ICONST] = exec_iconst;
-  ops[PRINT] = exec_print;
-  ops[PRINTLN] = exec_println;
-  ops[LOAD] = exec_load;
-  ops[STORE] = exec_store;
-  ops[JMP] = exec_jmp;
-  ops[JMPT] = exec_jmpt;
-  ops[ILT] = exec_ilt;
-  ops[IEQ] = exec_ieq;
+  ops[NOP].type = NOARGS;
+  ops[NOP].exec_none = exec_nop;
+
+  ops[IADD].type = NOARGS;
+  ops[IADD].exec_noargs = exec_iadd;
+
+  ops[ISUB].type = NOARGS;
+  ops[ISUB].exec_noargs = exec_isub;
+
+  ops[IMUL].type = NOARGS;
+  ops[IMUL].exec_noargs = exec_imul;
+
+  ops[IDIV].type = NOARGS;
+  ops[IDIV].exec_noargs = exec_idiv;
+
+  ops[ICONST].type = WITH_ARGS;
+  ops[ICONST].exec_args = exec_iconst;
+  
+  ops[PRINT].type = NOARGS;
+  ops[PRINT].exec_noargs = exec_print;
+  
+  ops[PRINTLN].type = NOARGS;
+  ops[PRINTLN].exec_noargs = exec_println;
+
+  ops[LOAD].type = MEMORY_HANDLER;
+  ops[LOAD].exec_mem = exec_load;
+
+  ops[STORE].type = MEMORY_HANDLER;
+  ops[STORE].exec_mem = exec_store;
+  
+  ops[JMP].type = UNCONDITIONAL_BRANCH;
+  ops[JMP].exec_ujmp = exec_jmp;
+
+  ops[JMPT].type = CONDITIONAL_BRANCH;
+  ops[JMPT].exec_args = exec_jmpt;
+
+  ops[ILT].type = NOARGS;
+  ops[ILT].exec_noargs = exec_ilt;
+
+  ops[IEQ].type = NOARGS;
+  ops[IEQ].exec_noargs = exec_ieq;
 }
