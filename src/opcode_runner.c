@@ -41,7 +41,7 @@ short exec_iconst(Stack * stack, const Code * code, short ip)
 {
   stack_obj_t v = code_fetch(code, ++ip);
   stack_push(stack, v);
-  return ip;
+  return ++ip;
 }
 
 void exec_print(Stack * stack)
@@ -63,15 +63,16 @@ short exec_load(Stack * stack, const Code * code, short ip, Memory * mem)
 {
   short offset = code_fetch(code, ++ip);
   stack_push(stack, mem->locals[offset]);
+  return ++ip;
 }
 
 
 short exec_store(Stack * stack, const Code * code, short ip, Memory * mem)
 {
 
-  short offset = code_fetch(code, ip);
+  short offset = code_fetch(code, ++ip);
   mem->locals[offset] = stack_pop(stack);
-  ++ip;
+  return ++ip;
 }
 
 short exec_jmp(const Code * code, short ip)
@@ -112,7 +113,6 @@ void exec_ilt(Stack * stack)
   short a = stack_pop(stack);
   unsigned int isEqual = (a < b) ? TRUE : FALSE;
   stack_push(stack, isEqual);
-  
 }
 
 void opcode_runner_init(Opcode * ops)

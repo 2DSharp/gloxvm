@@ -4,6 +4,7 @@
 #include "vm_struct.h"
 #include "bytecode.h"
 #include "code.h"
+#include "memory.h"
 #include "opcode.h"
 
 #include <stdio.h>
