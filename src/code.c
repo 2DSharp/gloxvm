@@ -8,7 +8,7 @@ Code * code_init(short * contents, size_t size)
 
   return code;
 }
-short code_fetch(Code * code, int index)
+short code_fetch(const Code * code, int index)
 {
   return code->contents[index];
 }
