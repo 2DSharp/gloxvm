@@ -35,7 +35,7 @@ int main(int argc, char **argv )
   Code * code = code_init(instrs, 2);
 
   //printf("IP: %d\n", vm->instr_ptr);
-  vm_run(vm, code, 1);
+  vm_run(vm, code, 0);
   //printf("IP: %d\n", vm->instr_ptr);
   
   vm_close(vm);

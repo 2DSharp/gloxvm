@@ -4,29 +4,32 @@
 #include "vm_struct.h"
 #include "bytecode.h"
 #include "code.h"
+#include "memory.h"
+#include "opcode.h"
 
 #include <stdio.h>
 
 #define TRUE 1
 #define FALSE 0
 
-typedef void (* opcode_runner)(Code *, VM * vm);
+void exec_nop();
+void exec_iadd(Stack * stack);
+void exec_isub(Stack * stack);
+void exec_imul(Stack * stack);
+void exec_idiv(Stack * stack);
+short exec_iconst(Stack * stack, const Code * code, short ip);
+void exec_print(Stack * stack);
+void exec_println(Stack * stack);
 
-void exec_nop(Code *, VM * vm);
-void exec_iadd(Code *, VM * vm);
-void exec_isub(Code *, VM * vm);
-void exec_imul(Code *, VM * vm);
-void exec_idiv(Code *, VM * vm);
-void exec_iconst(Code *, VM * vm);
-void exec_print(Code *, VM * vm);
-void exec_println(Code * code, VM * vm);
-void exec_load(Code *, VM * vm);
-void exec_store(Code *, VM * vm);
-void exec_jmp(Code * code, VM * vm);
-void exec_jmpt(Code * code, VM * vm);
-void exec_ilt(Code * code, VM * vm);
-void exec_ieq(Code * code, VM * vm);
+short exec_load(Stack * stack, const Code * code, short ip, Memory * mem);
 
-void opcode_runner_init(opcode_runner * ops);
+short exec_store(Stack * stack, const Code * code, short ip, Memory * mem);
+
+short exec_jmp(const Code * code, short ip);
+short exec_jmpt(Stack * stack, const Code * code, short ip);
+void exec_ieq(Stack * stack);
+void exec_ilt(Stack * stack);
+
+void opcode_runner_init(Opcode * ops);
 
 #endif
