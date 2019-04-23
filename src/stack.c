@@ -4,7 +4,7 @@
 Stack * stack_new(int size)
 {
   Stack * stack = malloc(sizeof(Stack));
-  stack->top = 0;
+  stack->top = -1;
   stack->size = size;
   
   stack->contents = malloc(size * sizeof(stack_obj_t));
