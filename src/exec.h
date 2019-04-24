@@ -28,6 +28,7 @@ short exec_jmp(const Code * code, short ip);
 short exec_jmpt(Stack * stack, const Code * code, short ip);
 void exec_ieq(Stack * stack);
 void exec_ilt(Stack * stack);
+void exec_pop(Stack * stack);
 
 void opcode_runner_init(Opcode * ops);
 

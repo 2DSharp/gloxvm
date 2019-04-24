@@ -115,6 +115,11 @@ void exec_ilt(Stack * stack)
   stack_push(stack, isEqual);
 }
 
+void exec_pop(Stack * stack)
+{
+  stack_pop(stack);
+}
+
 void opcode_runner_init(Opcode * ops)
 {
   ops[NOP].type = NONE;
@@ -157,5 +162,8 @@ void opcode_runner_init(Opcode * ops)
   ops[ILT].exec_noargs = exec_ilt;
 
   ops[IEQ].type = NOARGS;
-  ops[IEQ].exec_noargs = exec_ieq;  
+  ops[IEQ].exec_noargs = exec_ieq;
+
+  ops[POP].type = NOARGS;
+  ops[POP].exec_noargs = exec_pop;
 }

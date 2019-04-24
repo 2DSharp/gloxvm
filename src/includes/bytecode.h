@@ -25,4 +25,5 @@
 #define IDIV 21
 #define PRINTLN 22
 #define IGT 23
+#define POP 24
 #endif /* bytecode.h */
