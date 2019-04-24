@@ -6,7 +6,7 @@
 #include "includes/vm_struct.h"
 #include "includes/bytecode.h"
 #include "memory.h"
-#include "opcode_runner.h"
+#include "exec.h"
 #include "includes/opcode.h"
 
 #include <stdio.h>

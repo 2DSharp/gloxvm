@@ -11,11 +11,11 @@ LDFLAGS=
 TARGET = glox
 all: $(TARGET)
 
-$(TARGET): stack.o code.o vm.o opcode_runner.o memory.o
+$(TARGET): stack.o code.o vm.o exec.o memory.o
 
 stack.o: stack.h
 memory.o: memory.h
-opcode_runner.o: opcode_runner.h
+exec.o: exec.h
 vm.o: vm.h
 code.o: code.h
 

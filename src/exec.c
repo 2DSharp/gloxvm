@@ -1,4 +1,4 @@
-#include "opcode_runner.h"
+#include "exec.h"
 
 void exec_nop()
 {
@@ -157,5 +157,5 @@ void opcode_runner_init(Opcode * ops)
   ops[ILT].exec_noargs = exec_ilt;
 
   ops[IEQ].type = NOARGS;
-  ops[IEQ].exec_noargs = exec_ieq;
+  ops[IEQ].exec_noargs = exec_ieq;  
 }
