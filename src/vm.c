@@ -5,13 +5,13 @@ VM * vm_init(size_t stack_size, Memory * mem)
   VM * vm = (VM*) malloc(sizeof(VM));
   vm->stack = stack_new(stack_size);
   vm->instr_ptr = 0;
-  vm->frame_ptr = vm->stack->top;
+  vm->frame_ptr = 0;
   vm->memory = mem;
   vm->state = ST_HALTED;
   return vm;
 }
 
-void vm_exec(VM * vm, const Code * code_mem, const Opcode * opcode, const Function * func_pool, int func_index)
+void vm_exec(VM * vm, const Code * code_mem, const Opcode * opcode, const Function * func_pool, int * func_index)
 {
   vm->state = ST_RUNNING;
   switch (opcode->type) {
@@ -31,7 +31,7 @@ void vm_exec(VM * vm, const Code * code_mem, const Opcode * opcode, const Functi
 	  break;
 
       case CALLER:
-	  vm->instr_ptr = opcode->exec_caller(vm->stack, code_mem, vm->instr_ptr, vm->memory, func_pool, &func_index, &vm->frame_ptr);
+	  vm->instr_ptr = opcode->exec_caller(vm->stack, code_mem, vm->instr_ptr, vm->memory, func_pool, func_index, &vm->frame_ptr);
 	  break;
 	  
       case NONE:
@@ -51,6 +51,7 @@ void vm_run(VM * vm, Code * code_mem, const Function * func_pool, int func_index
   Opcode opcodes[128];
   
   opcode_runner_init(opcodes);
+  vm->instr_ptr = func_pool[func_index].addr;
   code = code_fetch(code_mem, vm->instr_ptr);
 
   while (code != HALT && vm->state != ST_INVALID) {
@@ -58,10 +59,12 @@ void vm_run(VM * vm, Code * code_mem, const Function * func_pool, int func_index
     Opcode opcode = opcodes[code];
 
     if (debug) {
+      //printf("\tTop: %d\n", vm->stack->top);
       printf("IP: %03d\tOpcode: %04d\t", vm->instr_ptr, code);
+      //printf("fu: %d",func_pool[func_index].n_args);
     }
     /** Execute */
-    vm_exec(vm, code_mem, &opcode, func_pool, func_index);
+    vm_exec(vm, code_mem, &opcode, func_pool, &func_index);
     code = code_fetch(code_mem, vm->instr_ptr);
 
     if (debug) {
