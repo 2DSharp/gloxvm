@@ -8,6 +8,7 @@
 
 #define F_MAIN 0
 #define F_ADD 1
+#define F_FIB 1
 
 int main(int argc, char **argv )
 {
@@ -36,6 +37,7 @@ int main(int argc, char **argv )
 		     HALT };
   */
 
+  /*
   short instrs[] = {LOAD, 0, //int add(x, y) {
 		    LOAD, 1,
 		    IADD,    
@@ -53,12 +55,37 @@ int main(int argc, char **argv )
 		    PRINTLN, // print add(10, 17)
 		    HALT };
 
+  */
 
-  Code * code = code_init(instrs, 2);
+  short fib[] = {
+    // int fib(n)
+    ICONST, 20, 
+    CALL, F_FIB,
+    PRINTLN,
+    HALT,
+    LOAD, 0, 
+    ICONST, 2,
+    ILT, // if (n < 2) / n <= 1 goto 10
+    JMPT, 29,
+    LOAD, 0, // n
+    ICONST, 1, 
+    ISUB, // n - 1
+    CALL, F_FIB, // fib(n - 1)
+    LOAD, 0, // n
+    ICONST, 2,
+    ISUB, // n - 2
+    CALL, F_FIB, // fib(n-2)
+    IADD, // fib(n-1) + fib(n-2) Line: 23
+    RET,
+    LOAD, 0, // else return n
+    RET,
+  };
+
+  Code * code = code_init(fib, 2);
 
   Function f_main;
-  f_main.addr = 10;
-  f_main.locals = 2;
+  f_main.addr = 0;
+  f_main.locals = 0;
   f_main.n_args = 0;
   f_main.return_type = 0;
 
@@ -68,12 +95,18 @@ int main(int argc, char **argv )
   add.n_args = 2;
   add.return_type = 1;
 
+  Function f_fib;
+  f_fib.addr = 6;
+  f_fib.locals = 1;
+  f_fib.n_args = 1;
+  f_fib.return_type = 1;
+  
   Function func_pool[2];
   func_pool[F_MAIN] = f_main;
-  func_pool[F_ADD] = add;
+  func_pool[F_FIB] = f_fib;
   
   //printf("IP: %d\n", vm->instr_ptr);
-  vm_run(vm, code, func_pool, F_MAIN, 1);
+  vm_run(vm, code, func_pool, F_MAIN, 0);
   //printf("IP: %d\n", vm->instr_ptr);
   
   vm_close(vm);
