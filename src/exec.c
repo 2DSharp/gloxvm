@@ -141,7 +141,6 @@ short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const 
   stack_push(stack, ip + 1); // current ip
   
   *fp = fp_new;
-  
   ip = fn_pool[target_index].addr;
   *caller_index = target_index;
   return ip;

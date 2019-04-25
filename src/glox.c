@@ -44,7 +44,11 @@ int main(int argc, char **argv )
 		    RET,
 		    // void main() {
 		    ICONST, 10,
+		    STORE, 0,
 		    ICONST, 17,
+		    STORE, 1,
+		    LOAD, 0,
+		    LOAD, 1,
 		    CALL, 1, // add(10, 17)
 		    PRINTLN, // print add(10, 17)
 		    HALT };
@@ -54,7 +58,7 @@ int main(int argc, char **argv )
 
   Function f_main;
   f_main.addr = 10;
-  f_main.locals = 0;
+  f_main.locals = 2;
   f_main.n_args = 0;
   f_main.return_type = 0;
 
