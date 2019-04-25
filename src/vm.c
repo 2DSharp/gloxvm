@@ -31,7 +31,7 @@ void vm_exec(VM * vm, const Code * code_mem, const Opcode * opcode, const Functi
 	  break;
 
       case CALLER:
-	  vm->instr_ptr = opcode->exec_caller(vm->stack, code_mem, vm->instr_ptr, vm->memory, func_pool, func_index, &vm->frame_ptr);
+	  vm->instr_ptr = opcode->exec_caller(vm->stack, code_mem, vm->instr_ptr, vm->memory, func_pool, func_index, &(vm->frame_ptr));
 	  break;
 	  
       case NONE:
@@ -60,7 +60,13 @@ void vm_run(VM * vm, Code * code_mem, const Function * func_pool, int func_index
 
     if (debug) {
       //printf("\tTop: %d\n", vm->stack->top);
-      printf("IP: %03d\tOpcode: %04d\t", vm->instr_ptr, code);
+      printf("IP: %03d\tOpcode: %04d\tFP: %02d ", vm->instr_ptr, code, vm->frame_ptr);
+      // print the local memory
+      printf(" Mem: [ ");
+      for (int i = 0; i < 10; i++) {
+	printf("%d ", vm->memory->locals[i]);
+      }
+      printf(" ] ");
       //printf("fu: %d",func_pool[func_index].n_args);
     }
     /** Execute */
