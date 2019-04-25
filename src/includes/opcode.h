@@ -3,12 +3,14 @@
 #include "../stack.h"
 #include "../code.h"
 #include "../memory.h"
+#include "function.h"
 
 typedef void (* op_none)(void);
 typedef void (* op_noargs)(Stack * stack);
 typedef short (* op_args)(Stack * stack, const Code * code, short ip);
 typedef short (* op_ujmp)(const Code *, short ip);
-typedef short (* op_mem)(Stack * stack, const Code * code, short ip, Memory * mem);
+typedef short (* op_mem)(Stack * stack, const Code * code, short ip, Memory * mem, short fp);
+typedef short (* op_caller)(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp);
 
 typedef enum op_type {
   NONE,
@@ -17,6 +19,7 @@ typedef enum op_type {
   UNCONDITIONAL_BRANCH,
   CONDITIONAL_BRANCH,
   MEMORY_HANDLER,
+  CALLER,
   INVALID
 } OpType;
 
@@ -29,7 +32,7 @@ typedef struct opcode_t
     op_noargs exec_noargs;
     op_args exec_args;
     op_ujmp exec_ujmp;
-    //op_cjmp exec_cjmp;
+    op_caller exec_caller;
     op_mem exec_mem;
   };
 } Opcode;
