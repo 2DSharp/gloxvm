@@ -59,19 +59,20 @@ void exec_println(Stack * stack)
   printf("\n");
 }
 
-short exec_load(Stack * stack, const Code * code, short ip, Memory * mem)
+short exec_load(Stack * stack, const Code * code, short ip, Memory * mem, short fp)
 {
   short offset = code_fetch(code, ++ip);
-  stack_push(stack, mem->locals[offset]);
+  short addr = offset + fp;
+  stack_push(stack, mem->locals[addr]);
   return ++ip;
 }
 
 
-short exec_store(Stack * stack, const Code * code, short ip, Memory * mem)
+short exec_store(Stack * stack, const Code * code, short ip, Memory * mem, short fp)
 {
 
   short offset = code_fetch(code, ++ip);
-  mem->locals[offset] = stack_pop(stack);
+  mem->locals[fp + offset] = stack_pop(stack);
   return ++ip;
 }
 
@@ -120,6 +121,31 @@ void exec_pop(Stack * stack)
   stack_pop(stack);
 }
 
+short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp)
+{
+  short target_index = code_fetch(code, ++ip);
+
+  Function curr_fn = fn_pool[*caller_index];
+  
+  Function target_fn = fn_pool[target_index];
+
+  short fp_new = (*fp) + curr_fn.locals + curr_fn.n_args;
+
+  for (int i = 1; i <= target_fn.n_args; i ++) {
+      short v = stack_pop(stack);
+      mem->locals[fp_new + target_fn.n_args - i] = v; 
+    }
+  
+  stack_push(stack, *fp); // current frame ptr
+  stack_push(stack, ip); // current ip
+  
+  *fp = fp_new;
+  
+  ip = fn_pool[target_index].addr;
+  *caller_index = target_index;
+  
+  return ip;
+}
 void opcode_runner_init(Opcode * ops)
 {
   ops[NOP].type = NONE;
@@ -166,4 +192,7 @@ void opcode_runner_init(Opcode * ops)
 
   ops[POP].type = NOARGS;
   ops[POP].exec_noargs = exec_pop;
+
+  ops[CALL].type = CALLER;
+  ops[CALL].exec_caller = exec_call;
 }

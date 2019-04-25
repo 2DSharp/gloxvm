@@ -26,4 +26,6 @@
 #define PRINTLN 22
 #define IGT 23
 #define POP 24
+#define CALL 25
+#define RET 26
 #endif /* bytecode.h */
