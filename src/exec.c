@@ -112,8 +112,8 @@ void exec_ilt(Stack * stack)
 {
   short b = stack_pop(stack);
   short a = stack_pop(stack);
-  unsigned int isEqual = (a < b) ? TRUE : FALSE;
-  stack_push(stack, isEqual);
+  unsigned int isLessThan = (a < b) ? TRUE : FALSE;
+  stack_push(stack, isLessThan);
 }
 
 void exec_pop(Stack * stack)
