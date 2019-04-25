@@ -31,6 +31,7 @@ void exec_ieq(Stack * stack);
 void exec_ilt(Stack * stack);
 void exec_pop(Stack * stack);
 short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp);
+short exec_ret(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp);
 
 void opcode_runner_init(Opcode * ops);
 

@@ -135,17 +135,39 @@ short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const 
       short v = stack_pop(stack);
       mem->locals[fp_new + target_fn.n_args - i] = v; 
     }
-  
+
+  stack_push(stack, *caller_index); // Store this to access it later
   stack_push(stack, *fp); // current frame ptr
-  stack_push(stack, ip); // current ip
+  stack_push(stack, ip + 1); // current ip
   
   *fp = fp_new;
   
   ip = fn_pool[target_index].addr;
   *caller_index = target_index;
-  
   return ip;
 }
+
+short exec_ret(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp)
+{
+  short ret_val;
+  int has_returned = fn_pool[*caller_index].return_type > 0;
+
+  if (has_returned) {
+    /* Is not void */
+    ret_val = stack_pop(stack);
+  }
+
+  /* Restore the previous state from the stack */
+  short ret_ip = stack_pop(stack);
+  *fp = stack_pop(stack);
+  *caller_index = stack_pop(stack);
+  
+  if (has_returned)
+    stack_push(stack, ret_val);
+
+  return ret_ip;
+}
+
 void opcode_runner_init(Opcode * ops)
 {
   ops[NOP].type = NONE;
@@ -195,4 +217,7 @@ void opcode_runner_init(Opcode * ops)
 
   ops[CALL].type = CALLER;
   ops[CALL].exec_caller = exec_call;
+
+  ops[RET].type = CALLER;
+  ops[RET].exec_caller = exec_ret;
 }
