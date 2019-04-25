@@ -4,6 +4,8 @@
 typedef struct fn_t {
   int locals;
   int n_args;
-  int addr;
+  short addr;
+  int return_type;
 } Function;
+
 #endif
