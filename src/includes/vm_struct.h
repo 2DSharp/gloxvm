@@ -9,7 +9,7 @@ typedef enum state_t
 
 typedef struct vm_t
 {
-  int instr_ptr;
+  short instr_ptr;
   short frame_ptr;
   Stack * stack;
   Memory * memory;
