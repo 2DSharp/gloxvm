@@ -129,7 +129,7 @@ short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const 
   
   Function target_fn = fn_pool[target_index];
 
-  short fp_new = (*fp) + curr_fn.locals + curr_fn.n_args;
+  short fp_new = (*fp) + curr_fn.locals;
 
   for (int i = 1; i <= target_fn.n_args; i ++) {
       short v = stack_pop(stack);
