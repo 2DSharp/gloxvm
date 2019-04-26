@@ -5,7 +5,6 @@ VM * vm_init(size_t stack_size, Memory * mem)
   VM * vm = (VM*) malloc(sizeof(VM));
   vm->stack = stack_new(stack_size);
   vm->instr_ptr = 0;
-  vm->frame_ptr = 0;
   vm->memory = mem;
   vm->state = ST_HALTED;
   return vm;
@@ -27,11 +26,11 @@ void vm_exec(VM * vm, const Code * code_mem, const Opcode * opcode, const Functi
 	  vm->instr_ptr = opcode->exec_ujmp(code_mem, vm->instr_ptr);
 	  break;
       case MEMORY_HANDLER:
-	  vm->instr_ptr = opcode->exec_mem(vm->stack, code_mem, vm->instr_ptr, vm->memory, vm->frame_ptr);
+	  vm->instr_ptr = opcode->exec_mem(vm->stack, code_mem, vm->instr_ptr, vm->memory);
 	  break;
 
       case CALLER:
-	  vm->instr_ptr = opcode->exec_caller(vm->stack, code_mem, vm->instr_ptr, vm->memory, func_pool, func_index, &(vm->frame_ptr));
+	  vm->instr_ptr = opcode->exec_caller(vm->stack, code_mem, vm->instr_ptr, vm->memory, func_pool, func_index);
 	  break;
 	  
       case NONE:
@@ -60,7 +59,7 @@ void vm_run(VM * vm, Code * code_mem, const Function * func_pool, int func_index
 
     if (debug) {
       //printf("\tTop: %d\n", vm->stack->top);
-      printf("IP: %03d\tOpcode: %04d\tFP: %02d ", vm->instr_ptr, code, vm->frame_ptr);
+      printf("IP: %03d\tOpcode: %04d\tFP: %02d ", vm->instr_ptr, code, vm->memory->frame_ptr);
       // print the local memory
       printf(" Mem: [ ");
       for (int i = 0; i < 10; i++) {
@@ -75,7 +74,7 @@ void vm_run(VM * vm, Code * code_mem, const Function * func_pool, int func_index
 
     if (debug) {
       stack_debug_print(vm->stack);
-      printf("\tTop: %d\n", vm->stack->top);
+      printf("\tSP: %d\n", vm->stack->top);
     }
   }
 }

@@ -8,6 +8,7 @@ typedef struct memory_t
   unsigned int local_sz;
   short * globals;
   unsigned int global_sz;
+  short frame_ptr;
 } Memory;
 
 Memory * mem_init(unsigned int local_sz, unsigned int global_sz);

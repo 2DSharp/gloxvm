@@ -9,8 +9,8 @@ typedef void (* op_none)(void);
 typedef void (* op_noargs)(Stack * stack);
 typedef short (* op_args)(Stack * stack, const Code * code, short ip);
 typedef short (* op_ujmp)(const Code *, short ip);
-typedef short (* op_mem)(Stack * stack, const Code * code, short ip, Memory * mem, short fp);
-typedef short (* op_caller)(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp);
+typedef short (* op_mem)(Stack * stack, const Code * code, short ip, Memory * mem);
+typedef short (* op_caller)(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index);
 
 typedef enum op_type {
   NONE,

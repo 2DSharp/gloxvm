@@ -22,16 +22,16 @@ short exec_iconst(Stack * stack, const Code * code, short ip);
 void exec_print(Stack * stack);
 void exec_println(Stack * stack);
 
-short exec_load(Stack * stack, const Code * code, short ip, Memory * mem, short fp);
-short exec_store(Stack * stack, const Code * code, short ip, Memory * mem, short fp);
+short exec_load(Stack * stack, const Code * code, short ip, Memory * mem);
+short exec_store(Stack * stack, const Code * code, short ip, Memory * mem);
 
 short exec_jmp(const Code * code, short ip);
 short exec_jmpt(Stack * stack, const Code * code, short ip);
 void exec_ieq(Stack * stack);
 void exec_ilt(Stack * stack);
 void exec_pop(Stack * stack);
-short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp);
-short exec_ret(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp);
+short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index);
+short exec_ret(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index);
 
 void opcode_runner_init(Opcode * ops);
 

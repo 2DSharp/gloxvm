@@ -59,20 +59,20 @@ void exec_println(Stack * stack)
   printf("\n");
 }
 
-short exec_load(Stack * stack, const Code * code, short ip, Memory * mem, short fp)
+short exec_load(Stack * stack, const Code * code, short ip, Memory * mem)
 {
   short offset = code_fetch(code, ++ip);
-  short addr = offset + fp;
+  short addr = offset + mem->frame_ptr;
   stack_push(stack, mem->locals[addr]);
   return ++ip;
 }
 
 
-short exec_store(Stack * stack, const Code * code, short ip, Memory * mem, short fp)
+short exec_store(Stack * stack, const Code * code, short ip, Memory * mem)
 {
 
   short offset = code_fetch(code, ++ip);
-  mem->locals[fp + offset] = stack_pop(stack);
+  mem->locals[mem->frame_ptr + offset] = stack_pop(stack);
   return ++ip;
 }
 
@@ -121,7 +121,7 @@ void exec_pop(Stack * stack)
   stack_pop(stack);
 }
 
-short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp)
+short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index)
 {
   short target_index = code_fetch(code, ++ip);
 
@@ -129,7 +129,7 @@ short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const 
   
   Function target_fn = fn_pool[target_index];
 
-  short fp_new = (*fp) + curr_fn.locals;
+  short fp_new = mem->frame_ptr + curr_fn.locals;
 
   for (int i = 1; i <= target_fn.n_args; i ++) {
       short v = stack_pop(stack);
@@ -137,16 +137,16 @@ short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const 
     }
 
   stack_push(stack, *caller_index); // Store this to access it later
-  stack_push(stack, *fp); // current frame ptr
+  stack_push(stack, mem->frame_ptr); // current frame ptr
   stack_push(stack, ip + 1); // current ip
   
-  *fp = fp_new;
+  mem->frame_ptr = fp_new;
   ip = fn_pool[target_index].addr;
   *caller_index = target_index;
   return ip;
 }
 
-short exec_ret(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index, short * fp)
+short exec_ret(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index)
 {
   short ret_val;
   int has_returned = fn_pool[*caller_index].return_type > 0;
@@ -158,7 +158,7 @@ short exec_ret(Stack * stack, const Code * code, short ip, Memory * mem, const F
 
   /* Restore the previous state from the stack */
   short ret_ip = stack_pop(stack);
-  *fp = stack_pop(stack);
+  mem->frame_ptr = stack_pop(stack);
   *caller_index = stack_pop(stack);
   
   if (has_returned)
