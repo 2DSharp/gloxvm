@@ -59,7 +59,7 @@ int main(int argc, char **argv )
 
   short fib[] = {
     // int fib(n)
-    ICONST, 20, 
+    ICONST, 10, 
     CALL, F_FIB,
     PRINTLN,
     HALT,
@@ -106,7 +106,7 @@ int main(int argc, char **argv )
   func_pool[F_FIB] = f_fib;
   
   //printf("IP: %d\n", vm->instr_ptr);
-  vm_run(vm, code, func_pool, F_MAIN, 0);
+  vm_run(vm, code, func_pool, F_MAIN, 1);
   //printf("IP: %d\n", vm->instr_ptr);
   
   vm_close(vm);
