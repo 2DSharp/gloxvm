@@ -8,11 +8,11 @@ typedef struct token_node_t
 {
   struct token_node_t * next;
   struct token_node_t * prev;
-  Token * token;  
+  const Token * token;  
 } TokenNode;
 
-void push_back(TokenNode * head, Token * token);
-void flush_list(TokenNode * head);
-TokenNode * create_list(Token * token);
+void ll_push_back(TokenNode * head, const Token * token);
+void ll_flush_list(TokenNode * head);
+TokenNode * ll_create_list(const Token * token);
 
 #endif
