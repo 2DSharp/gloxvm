@@ -5,7 +5,7 @@ typedef struct token_t
 {
   unsigned int line; // 10
   char * name; //i
-  char * value; // identifier
+  char value[255]; // identifier
 } Token;
 
 #endif
