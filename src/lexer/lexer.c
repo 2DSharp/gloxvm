@@ -3,6 +3,7 @@
 #include<string.h>
 #include<ctype.h>
 #include "token.h"
+#include "linked_list.h"
 
 int find_key(const char * needle, char ** haystack, int sz)
 {
@@ -12,37 +13,105 @@ int find_key(const char * needle, char ** haystack, int sz)
     return -1;
 }
 
-int is_var_declaration(char * buffer)
+int is_var_declaration(const char * buffer)
 {
   char * var_types[] = { "int", "char", "string", "float" };
-
-  return (find_key(buffer, var_types, 4) > -1);
-    
+  return (find_key(buffer, var_types, 4) > -1);    
 }
 
-Token classify_keywords(char * buffer, int line)
+int string_match(const char * buffer, char * expected)
+{
+  return (strcmp(buffer, expected) == 0);
+}
+
+Token classify_keywords(const char * buffer, int line)
 {
   Token token;
   token.line = line;
-  token.value = buffer;
 
   if (is_var_declaration(buffer))
-    token.name = "VAR_DECLARATION";
-  
+    token.name = "VAR_TYPE";
+  else if (string_match(buffer, "if"))
+    token.name = "IF";
+  else if (string_match(buffer, "else"))
+    token.name = "ELSE";
+  else if (string_match(buffer, "fn"))
+    token.name = "FUNCTION";
   else
     token.name = "NAME";
-  
+
+  strncpy(token.value, buffer, sizeof(buffer) - 1);
   return token;
 }
+
+Token classify_symbols(const char c, int line)
+{
+  Token token;
+  token.line = line;
+
+  switch(c) {
+      case '(':
+	  token.name = "LPAREN";
+	  break;
+
+      case ')':
+	  token.name = "RPAREN";
+	  break;
+
+      case '{':
+	  token.name = "LBRACE";
+	  break;
+	  
+      case '}' :
+	  token.name = "RBRACE";
+	  break;
+
+      case ':':
+	  token.name = "COLON";
+	  break;
+
+      case '=':
+	  token.name = "EQUALS";
+	  break;
+  }
+  strncpy(token.value, &c, sizeof(&c) - 1);
+  return token;
+}
+
+Token classify_number(char * buffer, int line)
+{
+  Token token;
+  token.line = line;
+  token.name = "NUMBER";
+  strncpy(token.value, buffer, sizeof(buffer) - 1);
+
+  return token;
+}
+
+int tokenize_nums(char ch, char * buffer, int buff_end)
+{
+  if (isdigit(ch) || ch == '.')
+    buffer[buff_end++] = ch;
+
+  else {
+    buffer[buff_end] = '\0';
+    return 1;
+  }
+
+  return 0;
+}
+
 
 int main(){
   char ch, buffer[80], operators[] = "+-*/%=";
   FILE *fp;
   int line = 1;
   int buff_end = 0;
-  Token * head;
+  TokenNode * head = NULL;
+  int tokenized;
+  int is_num_buff = 0;
   
-  fp = fopen("program.c","r");
+  fp = fopen("program.glox","r");
 
   if(fp == NULL){
     printf("error while opening the file\n");
@@ -51,22 +120,59 @@ int main(){
 
   while((ch = fgetc(fp)) != EOF){ // tokenize
 
-    if (isalnum(ch))
-      buffer[buff_end++] = ch;
+    Token token;
+    tokenized = 0;
+  
+    if ((buff_end == 0) && isdigit(ch))
+      is_num_buff = 1;
 
-    int nl = (ch == '\n');
+    if (is_num_buff) {
+
+      if (tokenize_nums(ch, buffer, buff_end++)){
+
+	token = classify_number(buffer, line);
+	buff_end = is_num_buff = 0;
+	tokenized = 1;
+      }
+    } else {
+
+      if (isalnum(ch))
+	buffer[buff_end++] = ch;
     
-    if ((ch == ' ' || nl) && buff_end != 0) {
-      // end buffer
-      buffer[buff_end] = '\0';
-      buff_end = 0;
+      // Look for keywords
+      if (!isalnum(ch) && buff_end != 0) {
+	// stop if you find a space/symbol in between
+	buffer[buff_end] = '\0';
+	buff_end = 0;
 
-      Token token = classify_keywords(buffer, line);
-      printf("%d\t%s\t%s\n", token.line, token.name, token.value);
-
-      if (nl)
-	line++;
+	token = classify_keywords(buffer, line);
+	tokenized = 1;
+      }
     }
+    
+    int is_blank = (ch == ' ' || ch == '\n');
+    
+    if (!is_blank && buff_end == 0 && !tokenized) {
+
+      token = classify_symbols(ch, line);
+      tokenized = 1;
+    }
+
+    if (ch == '\n')
+      line++;
+    
+    if (tokenized) {
+      if (head == NULL) {
+	head = ll_create_list(token);
+      }
+      else {
+	ll_push_back(head, token);
+	//printf("Here: %s----\n", head->token.value);
+	//printf("%d\t%s\n", node->token.line, node->token.value);
+      }
+    }
+
+      //printf("Care: %s----\n", head->token.value);
 
     
     //printf("%c", ch);
@@ -74,5 +180,13 @@ int main(){
 
   fclose(fp);
 
+  TokenNode * ptr = head;
+
+  while (ptr != NULL) {
+
+    printf("{ Line: %d\tName: %s\tValue: %s\tNext: %d }\n", ptr->token.line, ptr->token.name, ptr->token.value, ptr->next);
+    ptr = ptr->next;
+  }
+    
   return 0;
 }
