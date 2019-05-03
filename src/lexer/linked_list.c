@@ -1,6 +1,6 @@
 #include "linked_list.h"
 
-void create_end_node(TokenNode * ptr, Token * token)
+void ll_create_end_node(TokenNode * ptr, const Token * token)
 {
   TokenNode * new_node = malloc(sizeof(TokenNode));
 
@@ -11,7 +11,7 @@ void create_end_node(TokenNode * ptr, Token * token)
   ptr->next = new_node;
 }
 
-TokenNode * create_list(Token * token)
+TokenNode * ll_create_list(const Token * token)
 {
   TokenNode * head = malloc(sizeof(TokenNode));
   head->prev = NULL;
@@ -21,7 +21,7 @@ TokenNode * create_list(Token * token)
   return head;
 }
 
-void push_back(TokenNode * head, Token * token)
+void ll_push_back(TokenNode * head, const Token * token)
 {
   TokenNode * ptr;
   ptr = head;
@@ -30,10 +30,10 @@ void push_back(TokenNode * head, Token * token)
     ptr = ptr->next;
   }
 
-  create_end_node(ptr, token);
+  ll_create_end_node(ptr, token);
 }
 
-void flush_list(TokenNode * head)
+void ll_flush_list(TokenNode * head)
 {
   TokenNode * ptr, * prev;
   prev = ptr = head;
