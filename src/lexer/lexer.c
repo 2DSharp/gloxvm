@@ -5,6 +5,50 @@
 #include "token.h"
 #include "linked_list.h"
 
+typedef enum bool_t
+  {
+    false = 0,
+    true = 1
+  } Boolean;
+    
+typedef enum str_type
+  {
+    NUMBER, VARCHAR
+  } Str_Type;
+
+typedef struct number_t {
+  int periods;
+} Number;
+
+typedef struct string_t {
+  int buff_end;
+  char arr[512];
+  Str_Type type;
+  Boolean is_complete;
+  
+  union {
+    int num_periods;
+  };
+  
+} String;
+
+TokenNode * push_token(TokenNode * head, Token token)
+{
+
+  if (head == NULL) {
+    head = ll_create_list(token);
+  }
+  else {
+    ll_push_back(head, token);
+	//printf("Here: %s----\n", head->token.value);
+	//printf("%d\t%s\n", node->token.line, node->token.value);
+  }
+    //printf("Care: %s----\n", head->token.value);
+    //printf("%c", ch);
+
+  return head;
+}
+
 int find_key(const char * needle, char ** haystack, int sz)
 {
     for (int i = 0; i < sz; i++)
@@ -101,7 +145,91 @@ int tokenize_nums(char ch, char * buffer, int buff_end)
   return 0;
 }
 
+void push_to_str(char ch, String * str)
+{
+  str->arr[++str->buff_end] = ch;
+}
 
+Boolean is_str_head(char ch, int buff_end)
+{
+  return (buff_end == -1 && (isalnum(ch) || ch == '_'));
+}
+
+void process_str_head(char ch, String * str)
+{
+  if (isdigit(ch))
+    str->type = NUMBER;
+  else if (isalpha(ch) || ch == '_')
+    str->type = VARCHAR;
+
+  push_to_str(ch, str);
+}
+
+Boolean str_buffer_exists(String * str)
+{
+  return (str->buff_end > -1) && (str->arr[str->buff_end] != '\0');
+}
+
+void end_str_buffer(String * str)
+{
+  str->arr[++str->buff_end] = '\0';
+}
+
+Boolean is_str_buffer_complete(String * str)
+{
+   return (str->buff_end > -1) && (str->arr[str->buff_end] == '\0');
+}
+
+void process_str_num(char ch, String * str)
+{
+  if (isdigit(ch)) {
+      push_to_str(ch, str);
+    }
+    else if (ch == '.' && str->num_periods == 0) {
+      push_to_str(ch, str);
+      ++str->num_periods;
+    }
+    else {
+      end_str_buffer(str);
+    }
+ 
+}
+
+void process_str_varchar(char ch, String * str)
+{
+  if (isalnum(ch) || ch == '_') {
+    push_to_str(ch, str);
+  }
+  else {
+    end_str_buffer(str);
+  }
+}
+void process_str(char ch, String * str)
+{
+  if (str->type == NUMBER) {
+    process_str_num(ch, str);
+  }
+  else if (str->type == VARCHAR) {
+    process_str_varchar(ch, str);
+  }
+    
+}
+
+Token classify_string(String * str, int line)
+{
+  Token token;
+  if (str->type == NUMBER)
+    token = classify_number(str->arr, line);
+  else 
+    token = classify_keywords(str->arr, line);
+
+  return token;
+}
+
+void str_reset(String * str)
+{
+  str->buff_end = -1;
+}
 int main(){
   char ch, buffer[80], operators[] = "+-*/%=";
   FILE *fp;
@@ -110,6 +238,8 @@ int main(){
   TokenNode * head = NULL;
   int tokenized;
   int is_num_buff = 0;
+  String * str = malloc(sizeof(String));
+  str->buff_end = -1;
   
   fp = fopen("program.glox","r");
 
@@ -122,60 +252,33 @@ int main(){
 
     Token token;
     tokenized = 0;
-  
-    if ((buff_end == 0) && isdigit(ch))
-      is_num_buff = 1;
 
-    if (is_num_buff) {
+    if (is_str_head(ch, str->buff_end)) {
+      process_str_head(ch, str);
+      //printf("Here");
+    }
 
-      if (tokenize_nums(ch, buffer, buff_end++)){
-
-	token = classify_number(buffer, line);
-	buff_end = is_num_buff = 0;
-	tokenized = 1;
-      }
-    } else {
-
-      if (isalnum(ch))
-	buffer[buff_end++] = ch;
-    
-      // Look for keywords
-      if (!isalnum(ch) && buff_end != 0) {
-	// stop if you find a space/symbol in between
-	buffer[buff_end] = '\0';
-	buff_end = 0;
-
-	token = classify_keywords(buffer, line);
-	tokenized = 1;
-      }
+    else if (str_buffer_exists(str)) {
+      process_str(ch, str);
+      //printf("%c", ch);
     }
     
+    if (is_str_buffer_complete(str)) {
+      token = classify_string(str, line);
+      head = push_token(head, token);
+      str_reset(str);
+    }
+
     int is_blank = (ch == ' ' || ch == '\n');
     
-    if (!is_blank && buff_end == 0 && !tokenized) {
+    if (!is_blank && str->buff_end == -1) {
 
       token = classify_symbols(ch, line);
-      tokenized = 1;
+      head = push_token(head, token);
     }
 
     if (ch == '\n')
       line++;
-    
-    if (tokenized) {
-      if (head == NULL) {
-	head = ll_create_list(token);
-      }
-      else {
-	ll_push_back(head, token);
-	//printf("Here: %s----\n", head->token.value);
-	//printf("%d\t%s\n", node->token.line, node->token.value);
-      }
-    }
-
-      //printf("Care: %s----\n", head->token.value);
-
-    
-    //printf("%c", ch);
   }
 
   fclose(fp);
