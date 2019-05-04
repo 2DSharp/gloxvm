@@ -92,7 +92,7 @@ Token classify_symbols(const char c, int line)
 {
   Token token;
   token.line = line;
-
+  
   switch(c) {
       case '(':
 	  token.name = "LPAREN";
@@ -118,7 +118,9 @@ Token classify_symbols(const char c, int line)
 	  token.name = "EQUALS";
 	  break;
   }
-  strncpy(token.value, &c, sizeof(&c) - 1);
+  token.value[0] = c;
+  token.value[1] = '\0';
+  //strncpy(token.value, strcat("", &c), sizeof(&c) - 1);
   return token;
 }
 
@@ -230,16 +232,35 @@ void str_reset(String * str)
 {
   str->buff_end = -1;
 }
+
+void update_alphanum_buffer(char ch, String * str)
+{
+  if (is_str_head(ch, str->buff_end)) {
+    process_str_head(ch, str);
+      //printf("Here");
+  }
+
+  else if (str_buffer_exists(str)) {
+    process_str(ch, str);
+      //printf("%c", ch);
+  }
+}
+
+Boolean is_symbol(char ch)
+{
+    int is_blank = (ch == ' ' || ch == '\n');    
+    return (!is_blank && !isalnum(ch));
+}
+
 int main(){
-  char ch, buffer[80], operators[] = "+-*/%=";
+  char ch;
   FILE *fp;
   int line = 1;
-  int buff_end = 0;
   TokenNode * head = NULL;
   int tokenized;
-  int is_num_buff = 0;
   String * str = malloc(sizeof(String));
   str->buff_end = -1;
+  str->num_periods = 0;
   
   fp = fopen("program.glox","r");
 
@@ -253,26 +274,15 @@ int main(){
     Token token;
     tokenized = 0;
 
-    if (is_str_head(ch, str->buff_end)) {
-      process_str_head(ch, str);
-      //printf("Here");
-    }
+    update_alphanum_buffer(ch, str);
 
-    else if (str_buffer_exists(str)) {
-      process_str(ch, str);
-      //printf("%c", ch);
-    }
-    
     if (is_str_buffer_complete(str)) {
       token = classify_string(str, line);
       head = push_token(head, token);
       str_reset(str);
     }
 
-    int is_blank = (ch == ' ' || ch == '\n');
-    
-    if (!is_blank && str->buff_end == -1) {
-
+    if (is_symbol(ch) && str->buff_end == -1) {
       token = classify_symbols(ch, line);
       head = push_token(head, token);
     }
@@ -290,6 +300,9 @@ int main(){
     printf("{ Line: %d\tName: %s\tValue: %s\tNext: %d }\n", ptr->token.line, ptr->token.name, ptr->token.value, ptr->next);
     ptr = ptr->next;
   }
-    
+
+  ll_flush_list(head);
+  free(str);
+  
   return 0;
 }
