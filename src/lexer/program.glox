@@ -1,5 +1,6 @@
 fn main():int
 {
   int i = 10.23
+  string str = "John"
 }
 

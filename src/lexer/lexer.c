@@ -13,7 +13,7 @@ typedef enum bool_t
     
 typedef enum str_type
   {
-    NUMBER, VARCHAR
+    NUMBER, STRING_LITERAL, VARCHAR
   } Str_Type;
 
 typedef struct number_t {
@@ -68,7 +68,7 @@ int string_match(const char * buffer, char * expected)
   return (strcmp(buffer, expected) == 0);
 }
 
-Token classify_keywords(const char * buffer, int line)
+Token tokenize_keywords(const char * buffer, int line)
 {
   Token token;
   token.line = line;
@@ -88,7 +88,7 @@ Token classify_keywords(const char * buffer, int line)
   return token;
 }
 
-Token classify_symbols(const char c, int line)
+Token tokenize_symbols(const char c, int line)
 {
   Token token;
   token.line = line;
@@ -124,13 +124,23 @@ Token classify_symbols(const char c, int line)
   return token;
 }
 
-Token classify_number(char * buffer, int line)
+Token tokenize_number(char * buffer, int line)
 {
   Token token;
   token.line = line;
   token.name = "NUMBER";
   strncpy(token.value, buffer, sizeof(buffer) - 1);
 
+  return token;
+}
+
+Token tokenize_string_literal(char * buffer, int line)
+{
+  Token token;
+  token.line = line;
+  token.name = "STRING_LITERAL";
+  strncpy(token.value, buffer, sizeof(buffer) - 1);
+  
   return token;
 }
 
@@ -154,13 +164,16 @@ void push_to_str(char ch, String * str)
 
 Boolean is_str_head(char ch, int buff_end)
 {
-  return (buff_end == -1 && (isalnum(ch) || ch == '_'));
+  return (buff_end == -1 && (isalnum(ch) || ch == '_' || ch == '"'));
 }
 
 void process_str_head(char ch, String * str)
 {
   if (isdigit(ch))
     str->type = NUMBER;
+  else if (ch == '"') {
+    str->type = STRING_LITERAL;
+  }
   else if (isalpha(ch) || ch == '_')
     str->type = VARCHAR;
 
@@ -197,6 +210,14 @@ void process_str_num(char ch, String * str)
  
 }
 
+void process_str_literal(char ch, String * str)
+{
+  push_to_str(ch, str);
+  
+  if (ch == '"')
+    end_str_buffer(str);
+}
+
 void process_str_varchar(char ch, String * str)
 {
   if (isalnum(ch) || ch == '_') {
@@ -211,19 +232,23 @@ void process_str(char ch, String * str)
   if (str->type == NUMBER) {
     process_str_num(ch, str);
   }
+  else if (str->type == STRING_LITERAL) {
+    process_str_literal(ch, str);
+  }
   else if (str->type == VARCHAR) {
     process_str_varchar(ch, str);
   }
-    
 }
 
-Token classify_string(String * str, int line)
+Token tokenize_string(String * str, int line)
 {
   Token token;
   if (str->type == NUMBER)
-    token = classify_number(str->arr, line);
+    token = tokenize_number(str->arr, line);
+  else if (str->type == STRING_LITERAL)
+    token = tokenize_string_literal(str->arr, line);
   else 
-    token = classify_keywords(str->arr, line);
+    token = tokenize_keywords(str->arr, line);
 
   return token;
 }
@@ -246,10 +271,14 @@ void update_alphanum_buffer(char ch, String * str)
   }
 }
 
+Boolean is_special(char ch)
+{
+  return ch == '"';
+}
 Boolean is_symbol(char ch)
 {
     int is_blank = (ch == ' ' || ch == '\n');    
-    return (!is_blank && !isalnum(ch));
+    return (!is_blank && !isalnum(ch) && !is_special(ch));
 }
 
 int main(){
@@ -277,13 +306,13 @@ int main(){
     update_alphanum_buffer(ch, str);
 
     if (is_str_buffer_complete(str)) {
-      token = classify_string(str, line);
+      token = tokenize_string(str, line);
       head = push_token(head, token);
       str_reset(str);
     }
 
     if (is_symbol(ch) && str->buff_end == -1) {
-      token = classify_symbols(ch, line);
+      token = tokenize_symbols(ch, line);
       head = push_token(head, token);
     }
 
@@ -297,7 +326,7 @@ int main(){
 
   while (ptr != NULL) {
 
-    printf("{ Line: %d\tName: %s\tValue: %s\tNext: %d }\n", ptr->token.line, ptr->token.name, ptr->token.value, ptr->next);
+    printf("{ Line: %d\tName: %s\t\tValue: %s\tNext: %d }\n", ptr->token.line, ptr->token.name, ptr->token.value, ptr->next);
     ptr = ptr->next;
   }
 
