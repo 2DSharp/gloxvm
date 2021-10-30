@@ -1,0 +1,1 @@
+/usr/bin/cc  -DFLATCC_REFLECTION=1 -std=c11 -pedantic -Wall -Wextra -Wno-stringop-truncation -Wno-format-overflow -DPORTABLE_POSIX_MEMALIGN=1 -Werror -Wno-unused-function -Wsign-conversion  -rdynamic CMakeFiles/monster_test_prefix.dir/monster_test_prefix.c.o  -o monster_test_prefix  ../../../../../lib/flatcc/lib/libflatccrt.a 

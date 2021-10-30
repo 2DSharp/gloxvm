@@ -3,15 +3,15 @@ CC = gcc
 # compiler flags:
 # -g adds debugging information to the executable file
 # -Wall turns on most, but not all, compiler warnings
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -I /mnt/x/Projects/gloxvm/include
 CPPFLAGS=
 LDFLAGS=
 #LIBS
 # the build target executable:
-TARGET = glox
-all: $(TARGET)
+TARGET = glox -Ilib/libflatccrt.a
+all: $(TARGET)  -Ilib/libflatccrt.a
 
-$(TARGET): stack.o code.o vm.o exec.o memory.o
+$(TARGET): glox.c stack.o code.o vm.o exec.o memory.o lib/libflatccrt.a
 
 stack.o: stack.h
 memory.o: memory.h
@@ -20,4 +20,4 @@ vm.o: vm.h
 code.o: code.h
 
 clean:
-	$(RM) -f $(TARGET) *.o
+	$(RM) -f $(TARGET) *.o 

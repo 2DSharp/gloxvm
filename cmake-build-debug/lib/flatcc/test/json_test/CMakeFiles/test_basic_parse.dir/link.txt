@@ -1,0 +1,1 @@
+/usr/bin/cc  -DFLATCC_REFLECTION=1 -std=c11 -pedantic -Wall -Wextra -Wno-stringop-truncation -Wno-format-overflow -DPORTABLE_POSIX_MEMALIGN=1 -Werror -Wno-unused-function -Wsign-conversion  -rdynamic CMakeFiles/test_basic_parse.dir/test_basic_parse.c.o  -o test_basic_parse  ../../../../../lib/flatcc/lib/libflatccrt.a 

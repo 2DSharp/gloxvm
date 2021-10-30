@@ -1,0 +1,1 @@
+/usr/bin/cc  -DFLATCC_REFLECTION=1 -std=c11 -pedantic -Wall -Wextra -Wno-stringop-truncation -Wno-format-overflow -DPORTABLE_POSIX_MEMALIGN=1 -Werror -Wno-unused-function -Wsign-conversion  -rdynamic CMakeFiles/flatcc_cli.dir/flatcc_cli.c.o  -o ../../../../../lib/flatcc/bin/flatcc  ../../../../../lib/flatcc/lib/libflatcc.a 

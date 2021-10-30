@@ -2,14 +2,14 @@
 #define CODE_H
 
 #include <stdlib.h>
-
+#include "includes/bytecode.h"
 typedef struct code_t
 {
   size_t size;
-  short * contents;
+  Bytecode * contents;
 } Code;
 
-Code * code_init(short * contents, size_t size);
-short code_fetch(const Code * code, int index);
+Code * code_init(Bytecode * contents, size_t size);
+Bytecode code_fetch(const Code * code, int index);
 
 #endif

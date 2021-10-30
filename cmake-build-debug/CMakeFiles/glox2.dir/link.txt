@@ -1,0 +1,1 @@
+/usr/bin/cc    CMakeFiles/glox2.dir/src/glox.c.o CMakeFiles/glox2.dir/src/vm.c.o CMakeFiles/glox2.dir/src/code.c.o CMakeFiles/glox2.dir/src/exec.c.o CMakeFiles/glox2.dir/src/memory.c.o CMakeFiles/glox2.dir/src/stack.c.o  -o glox2  ../lib/flatcc/lib/libflatccrt.a 

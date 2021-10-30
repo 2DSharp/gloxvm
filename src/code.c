@@ -1,6 +1,6 @@
 #include "code.h"
 
-Code * code_init(short * contents, size_t size)
+Code * code_init(Bytecode * contents, size_t size)
 {
   Code * code = malloc(sizeof(Code));
   code->size = size;
@@ -8,7 +8,7 @@ Code * code_init(short * contents, size_t size)
 
   return code;
 }
-short code_fetch(const Code * code, int index)
+Bytecode code_fetch(const Code * code, int index)
 {
   return code->contents[index];
 }

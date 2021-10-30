@@ -1,0 +1,1 @@
+/usr/bin/cc  -DFLATCC_REFLECTION=1 -std=c11 -pedantic -Wall -Wextra -Wno-stringop-truncation -Wno-format-overflow -DPORTABLE_POSIX_MEMALIGN=1 -Werror -Wno-unused-function -Wsign-conversion  -rdynamic CMakeFiles/test_json.dir/test_json.c.o  -o test_json  ../../../../../lib/flatcc/lib/libflatccrt.a 

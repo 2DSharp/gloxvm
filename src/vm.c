@@ -51,7 +51,7 @@ void vm_run(VM * vm, Code * code_mem, const Function * func_pool, int func_index
   
   opcode_runner_init(opcodes);
   vm->instr_ptr = func_pool[func_index].addr;
-  code = code_fetch(code_mem, vm->instr_ptr);
+  code = __get_code(code_fetch(code_mem, vm->instr_ptr));
 
   while (code != HALT && vm->state != ST_INVALID) {
     /** Decode **/
@@ -70,7 +70,7 @@ void vm_run(VM * vm, Code * code_mem, const Function * func_pool, int func_index
     }
     /** Execute */
     vm_exec(vm, code_mem, &opcode, func_pool, &func_index);
-    code = code_fetch(code_mem, vm->instr_ptr);
+    code = __get_code(code_fetch(code_mem, vm->instr_ptr));
 
     if (debug) {
       stack_debug_print(vm->stack);
@@ -83,4 +83,8 @@ void vm_close(VM * vm)
 {
   stack_flush(vm->stack);
   free(vm);
+}
+
+short __get_code(Bytecode code) {
+  return (*(short *) code.val);
 }

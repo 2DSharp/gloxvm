@@ -1,0 +1,20 @@
+// Example IDL file for our monster's schema.
+
+namespace Gloxvm;
+
+struct UInt64 { u:uint64; }
+struct Short { s:short;}
+struct Float64{ f:float;}
+struct Boolean {b:bool;}
+  
+union Any { UInt64, Short, Float64, Boolean}
+table Bytecode {
+  type:short;
+  data:Any;
+}
+
+table Module {
+ code:[Bytecode];
+}
+
+root_type Module;// Example IDL file for our monster's schema.

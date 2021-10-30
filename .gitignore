@@ -2,3 +2,9 @@
 *#*
 *.o
 glox
+bin/flatcc*
+lib/libflatcc*.a
+include/flatcc
+generated/
+build/
+cmake-buid-debug/

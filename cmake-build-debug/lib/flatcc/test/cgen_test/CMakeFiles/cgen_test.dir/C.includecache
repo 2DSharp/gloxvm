@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../lib/flatcc/include/flatcc/flatcc.h
+stddef.h
+-
+stdint.h
+-
+
+/mnt/x/Projects/glox2/lib/flatcc/test/cgen_test/cgen_test.c
+stdio.h
+-
+string.h
+-
+flatcc/flatcc.h
+/mnt/x/Projects/glox2/lib/flatcc/test/cgen_test/flatcc/flatcc.h
+

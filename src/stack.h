@@ -2,6 +2,7 @@
 #define STACK_H
 
 #include <stdlib.h>
+#include "includes/bytecode.h"
 
 typedef short stack_obj_t;
 typedef struct stack_t

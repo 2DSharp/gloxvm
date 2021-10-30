@@ -28,4 +28,16 @@
 #define POP 24
 #define CALL 25
 #define RET 26
+
+#define OPRND 0
+#define INT 1
+#define STR 2
+#define FLOAT 3
+
+typedef struct bytecode_t
+{
+  int type;
+  void * val;
+} Bytecode;
+
 #endif /* bytecode.h */

@@ -1,4 +1,6 @@
 #include "exec.h"
+#define  __get_data(bytecode, type) (*(type *) bytecode.val)
+
 
 void exec_nop()
 {
@@ -39,7 +41,7 @@ void exec_idiv(Stack * stack)
 
 short exec_iconst(Stack * stack, const Code * code, short ip)
 {
-  stack_obj_t v = code_fetch(code, ++ip);
+  stack_obj_t v = __get_data(code_fetch(code, ++ip), short);
   stack_push(stack, v);
   return ++ip;
 }
@@ -61,7 +63,7 @@ void exec_println(Stack * stack)
 
 short exec_load(Stack * stack, const Code * code, short ip, Memory * mem)
 {
-  short offset = code_fetch(code, ++ip);
+  short offset = __get_data(code_fetch(code, ++ip), short);
   short addr = offset + mem->frame_ptr;
   stack_push(stack, mem->locals[addr]);
   return ++ip;
@@ -71,14 +73,14 @@ short exec_load(Stack * stack, const Code * code, short ip, Memory * mem)
 short exec_store(Stack * stack, const Code * code, short ip, Memory * mem)
 {
 
-  short offset = code_fetch(code, ++ip);
+  short offset = __get_data(code_fetch(code, ++ip), short);
   mem->locals[mem->frame_ptr + offset] = stack_pop(stack);
   return ++ip;
 }
 
 short exec_jmp(const Code * code, short ip)
 {
-  return code_fetch(code, ++ip);
+  return __get_data(code_fetch(code, ++ip), short);
 }
 
 /* 
@@ -87,8 +89,8 @@ short exec_jmp(const Code * code, short ip)
  */
 short exec_jmpt(Stack * stack, const Code * code, short ip)
 {
-  int addr = code_fetch(code, ++ip);
-  if (stack_pop(stack) == TRUE)
+  short addr = __get_data(code_fetch(code, ++ip), short);
+  if (stack_pop(stack))
     ip = addr;
   else
      ++ip;
@@ -123,7 +125,7 @@ void exec_pop(Stack * stack)
 
 short exec_call(Stack * stack, const Code * code, short ip, Memory * mem, const Function * fn_pool, int * caller_index)
 {
-  short target_index = code_fetch(code, ++ip);
+  short target_index = __get_data(code_fetch(code, ++ip), short);
 
   Function curr_fn = fn_pool[*caller_index];
   
@@ -220,3 +222,4 @@ void opcode_runner_init(Opcode * ops)
   ops[RET].type = CALLER;
   ops[RET].exec_caller = exec_ret;
 }
+
